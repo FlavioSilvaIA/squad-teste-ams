@@ -1,0 +1,45 @@
+{
+  "v": 1,
+  "verdict": "mapped",
+  "module": "VENDAS",
+  "otherModules": [],
+  "notSupported": [],
+  "risk": 2,
+  "files": [
+    {
+      "path": "api/vendas/service.ts",
+      "use": "change"
+    },
+    {
+      "path": "api/vendas/routes.ts",
+      "use": "read"
+    },
+    {
+      "path": "src/features/vendas/VendasPage.tsx",
+      "use": "read"
+    },
+    {
+      "path": "test/vendas/service.test.ts",
+      "use": "test"
+    }
+  ],
+  "dbObjects": [],
+  "rules": [
+    "RN-001",
+    "RN-002",
+    "RN-003"
+  ],
+  "cases": {
+    "request": [
+      "T001",
+      "T002"
+    ],
+    "regression": [
+      "R001",
+      "R002",
+      "R003",
+      "R004",
+      "R005"
+    ]
+  }
+}

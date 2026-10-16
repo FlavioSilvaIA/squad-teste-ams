@@ -12,7 +12,7 @@ export async function registrarVenda(store: Store, itens: ItemVenda[]): Promise<
   for (const item of itens) {
     const produto = await store.produto(item.sku);
     if (!produto) throw new Error('PRODUTO_INEXISTENTE');
-    totalCents += produto.precoCents;
+    totalCents += produto.precoCents * item.quantidade;
     await baixar(store, item.sku, item.quantidade);
   }
   return store.salvarVenda({ itens, totalCents });
