@@ -8,6 +8,15 @@ export async function registrarVenda(store: Store, itens: ItemVenda[]): Promise<
   if (itens.length === 0 || !itens.every((i) => isSku(i.sku) && i.quantidade > 0)) {
     throw new Error('VENDA_INVALIDA');
   }
+  // Confere o saldo de todos os itens antes de baixar qualquer um, para recusar sem alterar o estoque.
+  const pedido = new Map<string, number>();
+  for (const item of itens) {
+    pedido.set(item.sku, (pedido.get(item.sku) ?? 0) + item.quantidade);
+  }
+  for (const [sku, quantidade] of pedido) {
+    const produto = await store.produto(sku);
+    if (produto && quantidade > produto.quantidade) throw new Error('ESTOQUE_INSUFICIENTE');
+  }
   let totalCents = 0;
   for (const item of itens) {
     const produto = await store.produto(item.sku);
