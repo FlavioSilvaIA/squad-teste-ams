@@ -1,4 +1,5 @@
 import express from 'express';
+import { calculadoraRoutes } from './calculadora/routes';
 import { estoqueRoutes } from './estoque/routes';
 import { memoryStore, produtosIniciais } from './store';
 import { vendasRoutes } from './vendas/routes';
@@ -11,6 +12,7 @@ app.get('/api/health', (_req, res) => {
 });
 app.use('/api/estoque', estoqueRoutes(store));
 app.use('/api/vendas', vendasRoutes(store));
+app.use('/api/calculadora', calculadoraRoutes());
 
 const port = Number(process.env.PORT ?? 4000);
 app.listen(port, process.env.HOST ?? '127.0.0.1');

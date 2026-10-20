@@ -15,3 +15,12 @@ export interface Venda {
   itens: ItemVenda[];
   totalCents: number;
 }
+
+export type Operacao = 'somar' | 'subtrair' | 'multiplicar' | 'dividir';
+
+export interface Calculo {
+  a: number;
+  b: number;
+  operacao: Operacao;
+  resultado: number;
+}
