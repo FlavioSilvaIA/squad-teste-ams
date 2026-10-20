@@ -1,0 +1,33 @@
+{
+  "v": 1,
+  "verdict": "mapped",
+  "verification": "manual_visual",
+  "module": "ESTOQUE",
+  "otherModules": [],
+  "notSupported": [],
+  "risk": 1,
+  "files": [
+    {
+      "path": "src/features/estoque/EstoquePage.tsx",
+      "use": "change"
+    },
+    {
+      "path": "src/features/estoque/api.ts",
+      "use": "read"
+    },
+    {
+      "path": "test/estoque/service.test.ts",
+      "use": "test"
+    }
+  ],
+  "dbObjects": [],
+  "rules": [],
+  "cases": {
+    "request": [],
+    "regression": [
+      "R001",
+      "R002",
+      "R003"
+    ]
+  }
+}
