@@ -28,8 +28,16 @@ export function CalculadoraPage() {
   const [operador, setOperador] = useState<Operador | null>(null);
   const [novoNumero, setNovoNumero] = useState(true);
   const [erro, setErro] = useState(false);
+  const [concluida, setConcluida] = useState('');
+
+  const pendente =
+    acumulado !== null && operador !== null
+      ? `${formatar(acumulado)}${operador}${novoNumero ? '' : visor}`
+      : '';
+  const operacao = pendente || concluida;
 
   const limpar = () => {
+    setConcluida('');
     setVisor('0');
     setAcumulado(null);
     setOperador(null);
@@ -39,6 +47,7 @@ export function CalculadoraPage() {
 
   const digitar = (d: string) => {
     if (erro) return;
+    setConcluida('');
     if (novoNumero) {
       setVisor(d);
       setNovoNumero(false);
@@ -49,6 +58,7 @@ export function CalculadoraPage() {
 
   const decimal = () => {
     if (erro) return;
+    setConcluida('');
     if (novoNumero) {
       setVisor('0.');
       setNovoNumero(false);
@@ -82,6 +92,7 @@ export function CalculadoraPage() {
 
   const escolherOperador = (op: Operador) => {
     if (erro) return;
+    setConcluida('');
     const resultado = resolver();
     if (resultado === null || resultado === undefined) {
       setVisor('Erro');
@@ -96,6 +107,7 @@ export function CalculadoraPage() {
 
   const igual = () => {
     if (erro || operador === null || acumulado === null) return;
+    setConcluida(`${pendente}=`);
     const resultado = resolver();
     if (resultado === null || resultado === undefined) {
       setVisor('Erro');
@@ -111,6 +123,9 @@ export function CalculadoraPage() {
   return (
     <section style={estilos.secao}>
       <h1 style={estilos.titulo}>Calculadora</h1>
+      <div style={estilos.operacao} aria-label="Operação" data-testid="operacao">
+        {operacao}
+      </div>
       <div style={estilos.visor} role="status" aria-label="Visor">
         {visor}
       </div>
