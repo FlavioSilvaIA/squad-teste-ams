@@ -1,0 +1,53 @@
+{
+  "v": 1,
+  "verdict": "requires_architecture",
+  "verification": "manual_visual",
+  "module": "APP",
+  "scope": {
+    "paths": [
+      "src/App.tsx",
+      "src/features/calculadora/**"
+    ],
+    "testPaths": []
+  },
+  "otherModules": [],
+  "notSupported": [],
+  "risk": 2,
+  "files": [
+    {
+      "path": "src/App.tsx",
+      "use": "change"
+    },
+    {
+      "path": "src/features/calculadora/CalculadoraPage.tsx",
+      "use": "change"
+    },
+    {
+      "path": "src/features/calculadora/estilos.ts",
+      "use": "change"
+    },
+    {
+      "path": "src/features/estoque/EstoquePage.tsx",
+      "use": "read"
+    },
+    {
+      "path": "src/features/estoque/estilos.ts",
+      "use": "read"
+    },
+    {
+      "path": "src/main.tsx",
+      "use": "read"
+    }
+  ],
+  "dbObjects": [],
+  "rules": [],
+  "cases": {
+    "request": [],
+    "regression": [
+      "R001",
+      "R002",
+      "R003",
+      "R004"
+    ]
+  }
+}
