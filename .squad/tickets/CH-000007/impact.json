@@ -1,0 +1,40 @@
+{
+  "v": 1,
+  "verdict": "mapped",
+  "verification": "manual_visual",
+  "module": "CALCULADORA",
+  "otherModules": [],
+  "notSupported": [],
+  "risk": 2,
+  "files": [
+    {
+      "path": "src/features/calculadora/CalculadoraPage.tsx",
+      "use": "change"
+    },
+    {
+      "path": "src/features/calculadora/estilos.ts",
+      "use": "change"
+    },
+    {
+      "path": "src/App.tsx",
+      "use": "read"
+    }
+  ],
+  "dbObjects": [],
+  "rules": [
+    "RN-001",
+    "RN-002",
+    "RN-005",
+    "RN-006",
+    "RN-009"
+  ],
+  "cases": {
+    "request": [],
+    "regression": [
+      "R001",
+      "R002",
+      "R003",
+      "R004"
+    ]
+  }
+}

@@ -22,6 +22,46 @@ function formatar(n: number): string {
   return String(Number(n.toPrecision(12)));
 }
 
+type Funcao = 'sen' | 'cos' | 'tan' | '√' | 'x²' | '1/x' | 'ln' | 'log' | 'n!';
+
+const FUNCOES: Funcao[] = ['sen', 'cos', 'tan', '√', 'x²', '1/x', 'ln', 'log', 'n!'];
+
+const RAD = Math.PI / 180;
+
+// Remove o ruído de ponto flutuante das funções trigonométricas (sen 180° = 0).
+function limparRuido(n: number): number {
+  return Math.round(n * 1e12) / 1e12;
+}
+
+function aplicarFuncao(x: number, fn: Funcao): number | null {
+  switch (fn) {
+    case 'sen':
+      return limparRuido(Math.sin(x * RAD));
+    case 'cos':
+      return limparRuido(Math.cos(x * RAD));
+    case 'tan': {
+      if (Math.abs(Math.cos(x * RAD)) < 1e-12) return null;
+      return limparRuido(Math.tan(x * RAD));
+    }
+    case '√':
+      return x < 0 ? null : Math.sqrt(x);
+    case 'x²':
+      return x * x;
+    case '1/x':
+      return x === 0 ? null : 1 / x;
+    case 'ln':
+      return x <= 0 ? null : Math.log(x);
+    case 'log':
+      return x <= 0 ? null : Math.log10(x);
+    case 'n!': {
+      if (!Number.isInteger(x) || x < 0 || x > 170) return null;
+      let r = 1;
+      for (let i = 2; i <= x; i++) r *= i;
+      return r;
+    }
+  }
+}
+
 export function CalculadoraPage() {
   const [visor, setVisor] = useState('0');
   const [acumulado, setAcumulado] = useState<number | null>(null);
@@ -29,6 +69,9 @@ export function CalculadoraPage() {
   const [novoNumero, setNovoNumero] = useState(true);
   const [erro, setErro] = useState(false);
   const [concluida, setConcluida] = useState('');
+  const [cientifica, setCientifica] = useState(false);
+  // Visor com valor pronto (função ou π): o próximo dígito o substitui.
+  const [completo, setCompleto] = useState(false);
 
   const pendente =
     acumulado !== null && operador !== null
@@ -43,14 +86,16 @@ export function CalculadoraPage() {
     setOperador(null);
     setNovoNumero(true);
     setErro(false);
+    setCompleto(false);
   };
 
   const digitar = (d: string) => {
     if (erro) return;
     setConcluida('');
-    if (novoNumero) {
+    if (novoNumero || completo) {
       setVisor(d);
       setNovoNumero(false);
+      setCompleto(false);
     } else {
       setVisor(visor === '0' ? d : visor + d);
     }
@@ -59,16 +104,17 @@ export function CalculadoraPage() {
   const decimal = () => {
     if (erro) return;
     setConcluida('');
-    if (novoNumero) {
+    if (novoNumero || completo) {
       setVisor('0.');
       setNovoNumero(false);
+      setCompleto(false);
     } else if (!visor.includes('.')) {
       setVisor(visor + '.');
     }
   };
 
   const apagar = () => {
-    if (erro || novoNumero) return;
+    if (erro || novoNumero || completo) return;
     const proximo = visor.length > 1 ? visor.slice(0, -1) : '0';
     setVisor(proximo === '-' ? '0' : proximo);
   };
@@ -82,6 +128,30 @@ export function CalculadoraPage() {
     if (erro) return;
     setVisor(formatar(Number(visor) / 100));
     setNovoNumero(true);
+    setCompleto(false);
+  };
+
+  const funcao = (fn: Funcao) => {
+    if (erro) return;
+    const resultado = aplicarFuncao(Number(visor), fn);
+    if (resultado === null || !Number.isFinite(resultado)) {
+      setVisor('Erro');
+      setErro(true);
+      return;
+    }
+    setConcluida('');
+    setVisor(formatar(resultado));
+    // Com operador pendente o visor é o operando; sem ele, o próximo dígito inicia número novo.
+    setNovoNumero(acumulado === null || operador === null);
+    setCompleto(true);
+  };
+
+  const pi = () => {
+    if (erro) return;
+    setConcluida('');
+    setVisor(formatar(Math.PI));
+    setNovoNumero(acumulado === null || operador === null);
+    setCompleto(true);
   };
 
   const resolver = (): number | null | undefined => {
@@ -103,6 +173,7 @@ export function CalculadoraPage() {
     setVisor(formatar(resultado));
     setOperador(op);
     setNovoNumero(true);
+    setCompleto(false);
   };
 
   const igual = () => {
@@ -118,6 +189,7 @@ export function CalculadoraPage() {
     setAcumulado(null);
     setOperador(null);
     setNovoNumero(true);
+    setCompleto(false);
   };
 
   return (
@@ -179,6 +251,27 @@ export function CalculadoraPage() {
           =
         </button>
       </div>
+      <button
+        type="button"
+        style={estilos.alternar}
+        aria-pressed={cientifica}
+        onClick={() => setCientifica(!cientifica)}
+      >
+        Científica
+      </button>
+      {cientifica && (
+        <div style={estilos.gradeCientifica} aria-label="Funções científicas">
+          {FUNCOES.map((fn) => (
+            <button key={fn} type="button" style={estilos.funcao} onClick={() => funcao(fn)}>
+              {fn}
+            </button>
+          ))}
+          <button type="button" style={estilos.funcao} onClick={pi}>
+            π
+          </button>
+          <span>sen, cos e tan em graus</span>
+        </div>
+      )}
     </section>
   );
 }

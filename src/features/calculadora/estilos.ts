@@ -13,9 +13,21 @@ export const estilosNavbar: Record<'barra' | 'link', CSSProperties> = {
 };
 
 export const estilos: Record<
-  'secao' | 'titulo' | 'operacao' | 'visor' | 'grade' | 'tecla' | 'operador',
+  | 'secao'
+  | 'titulo'
+  | 'operacao'
+  | 'visor'
+  | 'grade'
+  | 'tecla'
+  | 'operador'
+  | 'alternar'
+  | 'gradeCientifica'
+  | 'funcao',
   CSSProperties
 > = {
+  alternar: { background: '#ffffff', border: '1px solid #fca5a5', fontSize: '14px', marginTop: '12px', padding: '6px 12px' },
+  gradeCientifica: { display: 'grid', gap: '8px', gridTemplateColumns: 'repeat(4, 64px)', marginTop: '12px' },
+  funcao: { background: '#fef3c7', border: '1px solid #fcd34d', fontSize: '16px', padding: '12px 0' },
   secao: {
     background: '#fef2f2',
     color: '#1f2937',
